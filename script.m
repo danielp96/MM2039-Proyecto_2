@@ -1,7 +1,7 @@
 %
 
 % data1 = voltaje referencia, data2 = voltaje capacitor
-[t1, clk1, data1] = filter_data('./data_1uF.csv', 40, 5/125, 40, 253);
+[t1, clk1, data1] = filter_data('./data_1uF.csv', 40, 5/125, 42, 253);
 [t2, clk2, data2] = filter_data('./data_10uF.csv', 40, 5/125, 428, 670);
 
 % Global
@@ -21,7 +21,7 @@ V1 = 0;
 V2 = 0;
 V1_f = [V1];
 V2_f = [V2];
-l = linspace(0,0.5,5000);
+l = linspace(0,h,5000);
 
 
 for i = 1:size(l, 2)
@@ -37,6 +37,30 @@ for i = 1:size(l, 2)
     n = V2_f(i)+ (0.5*K12 + 0.5*K22)*h;
     V2_f = [V2_f n];
 end
+
+% plots
+
+t = 10*(0:2*h:2*h*(size(V1_f, 2)-1));
+
+figure(1)
+plot(t, V1_f);
+hold on
+plot(t1, data1);
+title('Voltaje C1')
+xlabel('Tiempo (s)')
+ylabel('Voltaje (V)')
+legend('Metodo Ralston','Experimental', 'Location', 'se')
+
+
+figure(2)
+plot(t, V2_f);
+hold on
+plot(t2, data2);
+title('Voltaje C2')
+xlabel('Tiempo (s)')
+ylabel('Voltaje (V)')
+legend('Metodo Ralston','Experimental', 'Location', 'se')
+
 
 
 function [t, data1, data2] = filter_data(file, offset, scale, start_x, end_x)
@@ -61,3 +85,4 @@ function [f2] = f2_get(V1, V2, dV1)
     global  R2  C1  q2 
     f2 = (V1-V2+C1*R2*dV1)/(q2);
 end
+
