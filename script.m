@@ -28,19 +28,19 @@ for i = 1:size(l, 2)
     [K11] = f1_get(V1_f(i), V2_f(i));
     [K12] = f2_get(V1_f(i), V2_f(i), K11);
 
-    [K21] = f1_get((V1_f(i)+ 0.5*h*K11),(V2_f(i) + 0.5*h*K12));
-    [K22] = f2_get((V1_f(i)+ 0.5*h*K11),(V2_f(i) + 0.5*h*K12), K21);
+    [K21] = f1_get((V1_f(i)+ (3/4)*h*K11),(V2_f(i) + (3/4)*h*K12));
+    [K22] = f2_get((V1_f(i)+ (3/4)*h*K11),(V2_f(i) + (3/4)*h*K12), K21);
 
-    m = V1_f(i)+ (0.5*K11 + 0.5*K21)*h;
+    m = V1_f(i)+ ((1/3)*K11 + (2/3)*K21)*h;
     V1_f = [V1_f m];
     
-    n = V2_f(i)+ (0.5*K12 + 0.5*K22)*h;
+    n = V2_f(i)+ ((1/3)*K12 + (2/3)*K22)*h;
     V2_f = [V2_f n];
 end
 
 % plots
 
-t = 10*(0:2*h:2*h*(size(V1_f, 2)-1));
+t = (0:h:h*(size(V1_f, 2)-1));
 
 figure(1)
 plot(t, V1_f);
@@ -66,7 +66,7 @@ legend('Metodo Ralston','Experimental', 'Location', 'se')
 function [t, data1, data2] = filter_data(file, offset, scale, start_x, end_x)
     data_temp = readtable(file);
     
-    t = 0:0.004:(size(data_temp.CH1, 1)-1)*0.004;
+    t = 0:0.0002:(size(data_temp.CH1, 1)-1)*0.0002;
     t = t';
     
     t = t(1:(end_x - start_x + 1));
